@@ -44,7 +44,7 @@ const createUser = async (req, res) => {
     const userExist = await User.findOne({username});
     if (!userExist) {
         try {
-            const user = await User.create({name, username, password});
+            const user = await User.create({name, username, password}, {new: true});
             if (!user) {
                 //res.status(400)
                 throw new Error({statusCode: 400});
@@ -105,7 +105,7 @@ const deleteUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-    const {name, username, password} = req.body;
+    const {username, password} = req.body;
 
     const findUser = await User.findOne({username});
     if (findUser) {
@@ -113,8 +113,16 @@ const loginUser = async (req, res) => {
 
         if(!matchedPassword) throw new Error("Invalide credentials");
 
-        
+        res.status(200).json({
+            id: findUser?._id,
+            name: findUser?._name,
+            username: findUser?._username
+        });
     }
+};
+
+const logoutUser = async (req, res) => {
+
 };
 
 export {
@@ -124,4 +132,5 @@ export {
     updateUser,
     deleteUser,
     loginUser,
+    logoutUser,
 };

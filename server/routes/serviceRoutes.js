@@ -1,12 +1,13 @@
 import express from 'express';
 import { getAllServices, getServiceById, createService, updateService, deleteService } from '../controllers/serviceController.js';
+import authMiddleware from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.get("/", getAllServices);
-router.get("/:id", getServiceById);
-router.post("/", createService);
-router.put("/:id", updateService);
-router.delete('/:id', deleteService);
+router.get("/", authMiddleware, getAllServices);
+router.get("/:id", authMiddleware, getServiceById);
+router.post("/", authMiddleware, createService);
+router.put("/:id", authMiddleware, updateService);
+router.delete('/:id', authMiddleware, deleteService);
 
 export default router;

@@ -1,12 +1,13 @@
 import express from 'express';
 import { getAllModels, getModelById, createModel, updateModel, deleteModel } from '../controllers/modelController.js';
+import authMiddleware from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.get("/", getAllModels);
-router.get("/:id", getModelById);
-router.post("/", createModel);
-router.put("/:id", updateModel);
-router.delete('/:id', deleteModel);
+router.get("/", authMiddleware, getAllModels);
+router.get("/:id", authMiddleware, getModelById);
+router.post("/", authMiddleware, createModel);
+router.put("/:id", authMiddleware, updateModel);
+router.delete('/:id', authMiddleware, deleteModel);
 
 export default router;
