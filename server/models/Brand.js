@@ -1,4 +1,3 @@
-import { Timestamp } from "mongodb";
 import mongoose, { Schema } from "mongoose";
 
 const brandSchema = mongoose.Schema({

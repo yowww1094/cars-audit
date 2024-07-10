@@ -1,9 +1,8 @@
-import { model, models } from 'mongoose';
 import Model from '../models/Model.js';
 
 const getAllModels = async (req, res) => {
     try {
-        const Models = await Model.find({});
+        const models = await Model.find({});
         if(!models){
             res.status(404).json({
                 message: "No models found!"

@@ -28,9 +28,12 @@ const orderSchema = mongoose.Schema({
         type:String,
         required: true
     },
-    client:{
-        type:Schema.Types.ObjectId,
-        ref:"Client",
+    clientName:{
+        type:String,
+        required: true
+    },
+    clientPhone:{
+        type:String,
         required: true
     },
     serviceType:{
