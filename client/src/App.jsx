@@ -1,10 +1,28 @@
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/shared/Layout'
+import Dashboard from './components/Dashboard';
+import Services from './components/Services';
+import Brands from './components/Brands';
+import Models from './components/Models';
+import NotFound from './components/NotFound';
+import Login from './components/Login';
 
 function App() {
-
   return (
-    <>
-      <h1>react</h1>
-    </>
+  
+    <Router>
+      <Routes>
+        <Route path='/' element={<Layout/>}>
+          <Route index element={<Dashboard/>}/>
+          <Route path='services' element={<Services/>}/>
+          <Route path='brands' element={<Brands/>}/>
+          <Route path='models' element={<Models/>}/>
+        </Route>
+        <Route path='login' element={<Login/>} />
+        <Route path='*' element={<NotFound/>} />
+      </Routes>
+    </Router>
   )
 }
 
