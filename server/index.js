@@ -29,7 +29,7 @@ app.get('/', (req, res)=> {
     });
 });
 
-app.use('/', authRouter)
+app.use('/', authRouter);
 app.use('/users', userRouter);
 app.use('/brands', brandRouter);
 app.use('/models', modelRouter);

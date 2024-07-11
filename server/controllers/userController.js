@@ -1,15 +1,17 @@
+import generateToken from "../config/jsonWebToken.js";
 import User from "../models/User.js";
 import validateMongoDbId from "../utils/validateMongoDbId.js";
 
 const getAllUsers = async (req, res) => {
     try {
-        const users = await User.find({});
+        const users = await User.find();
         if (!users) {
             res.status(404).json({
                 message: 'No users found!'
             });
+            //throw new Error("No users found!");
         }
-        res.status(200).json({users});
+        res.status(200).json(users);
     } catch (error) {
         res.status(500).json({
             message: "Something went wrong!!"
@@ -44,18 +46,27 @@ const createUser = async (req, res) => {
     const userExist = await User.findOne({username});
     if (!userExist) {
         try {
-            const user = await User.create({name, username, password}, {new: true});
+            const user = await User.create({name, username, password});
             if (!user) {
-                //res.status(400)
-                throw new Error({statusCode: 400});
+                res.status(400)
+                //throw new Error({statusCode: 400});
             }
-            res.status(200).json({user});
+            return res.status(200).json({
+                id: user?._id, 
+                name: user?.name, 
+                username: user?.username
+            });
         } catch (error) {
-            throw new Error(error);
+            res.status(500).json({
+                message: "Something went wrong!"
+            })
+            console.log("Server error", error);
         }
     }
-    throw new Error("User already exist!");
-};
+    res.status(400).json({
+        message: "User already exists!"
+    })
+}
 
 const updateUser = async (req, res) => {
     const {id} = req.params;
@@ -105,7 +116,7 @@ const deleteUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-    const {username, password} = req.body;
+    const {name, username, password} = req.body;
 
     const findUser = await User.findOne({username});
     if (findUser) {
@@ -113,15 +124,18 @@ const loginUser = async (req, res) => {
 
         if(!matchedPassword) throw new Error("Invalide credentials");
 
+        const jwtToken = generateToken(findUser._id);
+        //console.log(jwtToken);
+
         res.status(200).json({
-            id: findUser?._id,
-            name: findUser?._name,
-            username: findUser?._username
-        });
+            id: findUser._id,
+            name: findUser.name,
+            token: jwtToken,
+        })
     }
 };
 
-const logoutUser = async (req, res) => {
+const logoutUser = (req, res) => {
 
 };
 
