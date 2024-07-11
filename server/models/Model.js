@@ -9,11 +9,7 @@ const modelSchema = mongoose.Schema({
     brand: {
         type: Schema.Types.ObjectId,
         ref: "brand"
-    },
-    cars: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Vehicule'
-    }]
+    }
 },
 {
     timestamps: true

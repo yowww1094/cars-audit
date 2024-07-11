@@ -27,7 +27,7 @@ const authMiddleware = async (req, res, next) => {
         res.status(400).json({
             message: "Token does not exisit!"
         })
-        console.log("Server error", error);
+        console.log("Server error");
     }
 };
 
