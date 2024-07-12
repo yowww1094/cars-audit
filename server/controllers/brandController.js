@@ -53,7 +53,7 @@ const updateBrand = async (req, res) => {
     const {id} = req.params;
     const {name} = req.body;
     try {
-        const brand = await Brand.findByIdAndUpdate(id, {name});
+        const brand = await Brand.findByIdAndUpdate(id, {name}, {new:true});
         if(!brand){
             res.status(400).json({
                 message: "Brand not found!"
