@@ -5,9 +5,6 @@ import cors from 'cors';
 import dbConnection from './config/dbConnection.js';
 import userRouter from './routes/userRoutes.js';
 import authRouter from './routes/authRoutes.js';
-import brandRouter from './routes/brandRoutes.js';
-import modelRouter from './routes/modelRoutes.js';
-import servicesRouter from './routes/serviceRoutes.js';
 import orderRouter from './routes/orderRoutes.js';
 
 import { notFound, errorHandler } from './utils/errorHandler.js';
@@ -31,9 +28,6 @@ app.get('/', (req, res)=> {
 
 app.use('/', authRouter);
 app.use('/users', userRouter);
-app.use('/brands', brandRouter);
-app.use('/models', modelRouter);
-app.use('/services', servicesRouter);
 app.use('/orders', orderRouter);
 
 app.use(notFound);

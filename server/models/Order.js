@@ -1,72 +1,61 @@
 import mongoose, { Schema } from "mongoose";
 import mongooseSequence from "mongoose-sequence";
 
-const orderSchema = mongoose.Schema({
-    dateEntrer:{
-        type:Date,
-        required: true
+const orderSchema = mongoose.Schema(
+  {
+    dateEntrer: {
+      type: Date,
+      required: [true, "Date d'entrer est obligatoire"],
     },
-    dateSortie:{
-        type:Date,
-        required: true
+    dateSortie: {
+      type: Date,
     },
-    blNumber:{
-        type:String,
-        required: true
+    blNumber: {
+      type: String,
+      required: [true, "Numero de BL est obligatoire"],
     },
-    brand:{
-        type:Schema.Types.ObjectId,
-        ref:"Brand",
-        required: true
+    brand: {
+      type: String,
+      required: [true, "Marque de voiture est obligatoire"],
     },
-    model:{
-        type:Schema.Types.ObjectId,
-        ref:"Model",
-        required: true
+    matricule: {
+      type: String,
+      required: [true, "Matricule de voiture est obligatoire"],
     },
-    matricule:{
-        type:String,
-        required: true
+    clientName: {
+      type: String,
+      required: [true, "Nom de Client est obligatoire"],
     },
-    clientName:{
-        type:String,
-        required: true
+    clientPhone: {
+      type: String,
     },
-    clientPhone:{
-        type:String,
-        required: true
+    serviceType: {
+      type: String,
+      required: [true, "Nature de Service est obligatoire"],
     },
-    serviceType:{
-        type:Schema.Types.ObjectId,
-        ref:"Service",
-        required: true
+    price: {
+      type: String,
+      required: [true, "Prix de service est obligatoire"],
     },
-    technicien:{
-        type:String,
-        required: true
+    paidAmt: {
+      type: String,
     },
-    price:{
-        type:String,
-        required: true
+    technicien: {
+      type: String,
     },
-    paidAmt:{
-        type:String,
-        required: true
+    seniorityCard: {
+      type: Number,
     },
-    seniorityCard:{
-        type:Number,
-        required: true
+    fidelity: {
+      type: Number,
     },
-    fidelity:{
-        type:Number,
-        required: true
-    }
-},
-{
-    timestamps: true
-});
+  },
+  {
+    timestamps: true,
+  }
+);
 
-orderSchema.plugin(mongooseSequence(mongoose), { inc_field: 'orderId' });
+orderSchema.plugin(mongooseSequence(mongoose), { inc_field: "orderId" });
 
 const Order = mongoose.model("Order", orderSchema);
 export default Order;
