@@ -9,22 +9,22 @@ export const DASHBOARD_SIDEBAR_LINKS = [
         path:'/',
         icon: <FaCarSide />,
     },
-    {
-        key:'services',
-        label:'Services',
-        path:'/services',
-        icon: <MdMiscellaneousServices />,
-    },
-    {
-        key:'brands',
-        label:'Brands',
-        path:'/brands',
-        icon: <SiMercedes />,
-    },
-    {
-        key:'models',
-        label:'Models',
-        path:'/models',
-        icon: <FaClipboardList />,
-    },
+    // {
+    //     key:'services',
+    //     label:'Services',
+    //     path:'/services',
+    //     icon: <MdMiscellaneousServices />,
+    // },
+    // {
+    //     key:'brands',
+    //     label:'Brands',
+    //     path:'/brands',
+    //     icon: <SiMercedes />,
+    // },
+    // {
+    //     key:'models',
+    //     label:'Models',
+    //     path:'/models',
+    //     icon: <FaClipboardList />,
+    // },
 ]

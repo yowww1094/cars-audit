@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
-import { FaCarAlt } from "react-icons/fa";
+import logo from '/protech-logo.png'
 import {HiOutlineLogout} from 'react-icons/hi'
 import { DASHBOARD_SIDEBAR_LINKS } from '../../lib/consts/Navigation';
 import { Link, useLocation } from 'react-router-dom';
@@ -9,9 +9,9 @@ const linkClasses = 'flex item-center gap-2 font-light px-3 py-2 hover:bg-neutra
 
 function Sidebar() {
   return (
-    <div className='flex flex-col bg-neutral-900 w-60 p-3 text-white'>
+    <div className='flex flex-col bg-neutral-900 w-60 h-screen p-3 text-white overflow-hidden sticky top-0'>
       <div className='flex items-center gap-2 px-3 pb-2 border-b border-neutral-700'>
-        <FaCarAlt fontSize={24}/>
+        <img src={logo} alt="logo" className='size-10'/>
         <span className='text-neutral-100 text-lg'>Protech Audit</span>
       </div>
       <div className='flex-1 py-8 flex flex-col gap-0.5'>
