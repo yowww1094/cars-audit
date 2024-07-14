@@ -4,10 +4,10 @@ import authMiddleware from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.get("/", getAllOrder);
-router.get("/:id", getOrderById);
-router.post("/", createOrder);
-router.put("/:id", updateOrder);
-router.delete('/:id', deleteOrder);
+router.get("/", authMiddleware, getAllOrder);
+router.get("/:id", authMiddleware, getOrderById);
+router.post("/", authMiddleware, createOrder);
+router.put("/:id", authMiddleware, updateOrder);
+router.delete('/:id', authMiddleware, deleteOrder);
 
 export default router;
