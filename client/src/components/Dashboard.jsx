@@ -5,10 +5,12 @@ import { FaEye } from 'react-icons/fa'
 import axios from 'axios'
 import dateFormat from 'dateformat'
 import * as XLSX from 'xlsx'
+import { useNavigate } from 'react-router'
 
 axios.defaults.baseURL = 'http://localhost:8080'
 
 function Dashboard() {
+    const navigate = useNavigate()
     const [showModal, setShowModal] = useState(false)
     const [showDataModal, setShowDataModal] = useState(false)
     const [formData, setFormData] = useState({
@@ -43,7 +45,15 @@ function Dashboard() {
         id: ''
     })
     const [tableData, setTableData] = useState([])
-    const [errors, setErrors] = useState({})
+    const [errors, setErrors] = useState({
+        dateEntrer: '',
+        blNumber: '',
+        brand: '',
+        matricule: '',
+        clientName: '',
+        serviceType: '',
+        price: ''
+    })
 
     const handelOnChange = (e) => {
         const { value, name } = e.target
@@ -67,18 +77,24 @@ function Dashboard() {
 
     const handleCreationSubmit = async (e) => {
         e.preventDefault()
+
         try {
-            const service = await axios.post('/orders', formData)
+            const service = await axios.post('/orders', formData, {
+                headers: {
+                    authorization: localStorage.getItem('_auth')
+                }
+            })
             if (service.status == 200) {
                 getFetchData()
                 setFormData({})
                 setFormDataEdit({})
                 setErrors({})
                 alert('Ajoutée avec Sucée')
-                
             }
         } catch (error) {
-            if (error.response || error.response.data.errors) {
+            if (error.response.data.auth == false) {
+                navigate('/login')
+            } else if (error.response.data) {
                 setErrors(error.response.data.errors)
             }
         }
@@ -86,7 +102,11 @@ function Dashboard() {
 
     const handleModificationSubmit = async (id) => {
         try {
-            const service = await axios.put('/orders/' + id, formDataEdit)
+            const service = await axios.put('/orders/' + id, formDataEdit, {
+                headers: {
+                    authorization: localStorage.getItem('_auth')
+                }
+            })
 
             if (service.status == 200) {
                 alert('Modifiée avec Sucée')
@@ -95,32 +115,65 @@ function Dashboard() {
                 setErrors({})
             }
         } catch (error) {
-            if (error.response || error.response.data.errors) {
+            if (error.response.data.auth == false) {
+                navigate('/login')
+            } else if (error.response.data) {
                 setErrors(error.response.data.errors)
             }
         }
     }
 
     const handelDelete = async (id) => {
-        const order = await axios.delete('/orders/' + id)
-        if (order.status == 200) {
-            getFetchData()
-            alert('Supprimée avec Sucée')
+        try {
+            const order = await axios.delete('/orders/' + id, {
+                headers: {
+                    authorization: localStorage.getItem('_auth')
+                }
+            })
+            if (order.status == 200) {
+                getFetchData()
+                alert('Supprimée avec Sucée')
+            }
+        } catch (error) {
+            if (error.response?.data.auth == false) {
+                navigate('/login')
+            }
         }
     }
 
     const handelSearch = async () => {
-        const orders = await axios.get('/orders', { params: formData })
-        if (orders.status == 200) {
-            setTableData(orders.data.orders)
+        try {
+            const orders = await axios.get('/orders', {
+                params: formData,
+                headers: {
+                    authorization: localStorage.getItem('_auth')
+                }
+            })
+            if (orders.status == 200) {
+                setTableData(orders.data.orders)
+            }
+        } catch (error) {
+            if (error.response?.data.auth == false) {
+                navigate('/login')
+            }
         }
     }
 
     const getFetchData = async () => {
-        const orders = await axios.get('/orders')
+        try {
+            const orders = await axios.get('/orders', {
+                headers: {
+                    authorization: localStorage.getItem('_auth')
+                }
+            })
 
-        if (orders.status == 200) {
-            setTableData(orders.data.orders)
+            if (orders.status == 200) {
+                setTableData(orders.data.orders)
+            }
+        } catch (error) {
+            if (error.response?.data.auth == false) {
+                navigate('/login')
+            }
         }
     }
 
@@ -196,7 +249,9 @@ function Dashboard() {
                                 value={formData.dateEntrer}
                                 onChange={handelOnChange}
                             />
-                            {errors.dateEntrer && <span className='text-red-500 text-sm pl-5'>{errors.dateEntrer}</span>}
+                            {errors.dateEntrer && (
+                                <span className="text-red-500 text-sm pl-5">{errors.dateEntrer}</span>
+                            )}
                         </div>
 
                         <div className="input-type">
@@ -224,9 +279,8 @@ function Dashboard() {
                                 placeholder="Numero de BL"
                                 value={formData.blNumber}
                                 onChange={handelOnChange}
-                                
                             />
-                            {errors.blNumber && <span className='text-red-500 text-sm pl-5'>{errors.blNumber}</span>}
+                            {errors.blNumber && <span className="text-red-500 text-sm pl-5">{errors.blNumber}</span>}
                         </div>
                         <div className="input-type">
                             <label htmlFor="brand" className="font-bold pl-5 pb-4">
@@ -241,7 +295,7 @@ function Dashboard() {
                                 value={formData.brand}
                                 onChange={handelOnChange}
                             />
-                            {errors.brand && <span className='text-red-500 text-sm pl-5'>{errors.brand}</span>}
+                            {errors.brand && <span className="text-red-500 text-sm pl-5">{errors.brand}</span>}
                         </div>
                     </div>
 
@@ -259,7 +313,7 @@ function Dashboard() {
                                 value={formData.matricule}
                                 onChange={handelOnChange}
                             />
-                            {errors.matricule && <span className='text-red-500 text-sm pl-5'>{errors.matricule}</span>}
+                            {errors.matricule && <span className="text-red-500 text-sm pl-5">{errors.matricule}</span>}
                         </div>
                         <div className="input-type">
                             <label htmlFor="clientName" className="font-bold pl-5 pb-4">
@@ -274,7 +328,9 @@ function Dashboard() {
                                 value={formData.clientName}
                                 onChange={handelOnChange}
                             />
-                            {errors.clientName && <span className='text-red-500 text-sm pl-5'>{errors.clientName}</span>}
+                            {errors.clientName && (
+                                <span className="text-red-500 text-sm pl-5">{errors.clientName}</span>
+                            )}
                         </div>
                         <div className="input-type">
                             <label htmlFor="clientPhone" className="font-bold pl-5 pb-4">
@@ -303,7 +359,9 @@ function Dashboard() {
                                 value={formData.serviceType}
                                 onChange={handelOnChange}
                             />
-                            {errors.serviceType && <span className='text-red-500 text-sm pl-5'>{errors.serviceType}</span>}
+                            {errors.serviceType && (
+                                <span className="text-red-500 text-sm pl-5">{errors.serviceType}</span>
+                            )}
                         </div>
                     </div>
 
@@ -321,7 +379,7 @@ function Dashboard() {
                                 value={formData.price}
                                 onChange={handelOnChange}
                             />
-                            {errors.price && <span className='text-red-500 text-sm pl-5'>{errors.price}</span>}
+                            {errors.price && <span className="text-red-500 text-sm pl-5">{errors.price}</span>}
                         </div>
                         <div className="input-type">
                             <label htmlFor="paidAmt" className="font-bold pl-5 pb-4">
@@ -447,7 +505,9 @@ function Dashboard() {
                                             value={dateFormatter(formDataEdit.dateEntrer, 'form')}
                                             onChange={handelOnChangeEdit}
                                         />
-                                        {errors.dateEntrer && <span className='text-red-500 text-sm pl-5'>{errors.dateEntrer}</span>}
+                                        {errors.dateEntrer && (
+                                            <span className="text-red-500 text-sm pl-5">{errors.dateEntrer}</span>
+                                        )}
                                     </div>
 
                                     <div className="input-type">
@@ -478,7 +538,9 @@ function Dashboard() {
                                             value={formDataEdit.blNumber}
                                             onChange={handelOnChangeEdit}
                                         />
-                                        {errors.blNumber && <span className='text-red-500 text-sm pl-5'>{errors.blNumber}</span>}
+                                        {errors.blNumber && (
+                                            <span className="text-red-500 text-sm pl-5">{errors.blNumber}</span>
+                                        )}
                                     </div>
                                     <div className="input-type">
                                         <label htmlFor="brand" className="font-bold pl-5 pb-4">
@@ -494,7 +556,9 @@ function Dashboard() {
                                             value={formDataEdit.brand}
                                             onChange={handelOnChangeEdit}
                                         />
-                                        {errors.brand && <span className='text-red-500 text-sm pl-5'>{errors.brand}</span>}
+                                        {errors.brand && (
+                                            <span className="text-red-500 text-sm pl-5">{errors.brand}</span>
+                                        )}
                                     </div>
                                 </div>
 
@@ -513,7 +577,9 @@ function Dashboard() {
                                             value={formDataEdit.matricule}
                                             onChange={handelOnChangeEdit}
                                         />
-                                        {errors.matricule && <span className='text-red-500 text-sm pl-5'>{errors.matricule}</span>}
+                                        {errors.matricule && (
+                                            <span className="text-red-500 text-sm pl-5">{errors.matricule}</span>
+                                        )}
                                     </div>
                                     <div className="input-type">
                                         <label htmlFor="clientName" className="font-bold pl-5 pb-4">
@@ -529,7 +595,9 @@ function Dashboard() {
                                             value={formDataEdit.clientName}
                                             onChange={handelOnChangeEdit}
                                         />
-                                        {errors.clientName && <span className='text-red-500 text-sm pl-5'>{errors.clientName}</span>}
+                                        {errors.clientName && (
+                                            <span className="text-red-500 text-sm pl-5">{errors.clientName}</span>
+                                        )}
                                     </div>
                                     <div className="input-type">
                                         <label htmlFor="clientPhone" className="font-bold pl-5 pb-4">
@@ -545,7 +613,6 @@ function Dashboard() {
                                             value={formDataEdit.clientPhone}
                                             onChange={handelOnChangeEdit}
                                         />
-
                                     </div>
                                     <div className="input-type">
                                         <label htmlFor="serviceType" className="font-bold pl-5 pb-4">
@@ -561,7 +628,9 @@ function Dashboard() {
                                             value={formDataEdit.serviceType}
                                             onChange={handelOnChangeEdit}
                                         />
-                                        {errors.serviceType && <span className='text-red-500 text-sm pl-5'>{errors.serviceType}</span>}
+                                        {errors.serviceType && (
+                                            <span className="text-red-500 text-sm pl-5">{errors.serviceType}</span>
+                                        )}
                                     </div>
                                 </div>
 
@@ -580,7 +649,9 @@ function Dashboard() {
                                             value={formDataEdit.price}
                                             onChange={handelOnChangeEdit}
                                         />
-                                        {errors.price && <span className='text-red-500 text-sm pl-5'>{errors.price}</span>}
+                                        {errors.price && (
+                                            <span className="text-red-500 text-sm pl-5">{errors.price}</span>
+                                        )}
                                     </div>
                                     <div className="input-type">
                                         <label htmlFor="paidAmt" className="font-bold pl-5 pb-4">
