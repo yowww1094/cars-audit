@@ -16,6 +16,7 @@ const getAllOrder = async (req, res) => {
     technicien,
     seniorityCard,
     fidelity,
+    reclamation
   } = req.query;
 
   let searchQuery = {};
@@ -58,6 +59,9 @@ const getAllOrder = async (req, res) => {
   }
   if (fidelity) {
     searchQuery.fidelity = fidelity;
+  }
+  if (reclamation) {
+    searchQuery.reclamation = reclamation;
   }
 
   try {
@@ -115,6 +119,7 @@ const createOrder = async (req, res) => {
     paidAmt,
     seniorityCard,
     fidelity,
+    reclamation
   } = req.body;
   try {
     const order = await Order.create({
@@ -131,6 +136,7 @@ const createOrder = async (req, res) => {
       paidAmt,
       seniorityCard,
       fidelity,
+      reclamation
     });
     if (!order) {
       res.status(400);
@@ -167,6 +173,7 @@ const updateOrder = async (req, res) => {
     paidAmt,
     seniorityCard,
     fidelity,
+    reclamation
   } = req.body;
   try {
     const order = await Order.findByIdAndUpdate(
@@ -185,6 +192,7 @@ const updateOrder = async (req, res) => {
         paidAmt,
         seniorityCard,
         fidelity,
+        reclamation
       },
       {
         new: true,

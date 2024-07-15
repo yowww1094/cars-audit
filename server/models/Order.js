@@ -44,11 +44,14 @@ const orderSchema = mongoose.Schema(
       type: String,
     },
     seniorityCard: {
-      type: Number,
+      type: String,
     },
     fidelity: {
-      type: Number,
+      type: String,
     },
+    reclamation: {
+      type: String
+    }
   },
   {
     timestamps: true,
