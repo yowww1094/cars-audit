@@ -24,9 +24,11 @@ function Dashboard() {
         serviceType: '',
         price: '',
         paidAmt: '',
+        unpaidAmt: '',
         technicien: '',
         seniorityCard: '',
-        fidelity: ''
+        fidelity: '',
+        reclamation: ''
     })
     const [formDataEdit, setFormDataEdit] = useState({
         dateEntrer: '',
@@ -38,12 +40,14 @@ function Dashboard() {
         clientPhone: '',
         serviceType: '',
         price: '',
-        paidAmt: '0',
+        paidAmt: '',
         technicien: '',
-        seniorityCard: '0',
-        fidelity: '0',
+        seniorityCard: '',
+        fidelity: '',
+        reclamation: '',
         id: ''
     })
+    const [unpaidAmt, setUnpaidAmt] = useState('')
     const [tableData, setTableData] = useState([])
     const [errors, setErrors] = useState({
         dateEntrer: '',
@@ -85,11 +89,42 @@ function Dashboard() {
                 }
             })
             if (service.status == 200) {
-                getFetchData()
-                setFormData({})
-                setFormDataEdit({})
+                setFormData({
+                    dateEntrer: '',
+                    dateSortie: '',
+                    blNumber: '',
+                    brand: '',
+                    matricule: '',
+                    clientName: '',
+                    clientPhone: '',
+                    serviceType: '',
+                    price: '',
+                    paidAmt: '',
+                    unpaidAmt: '',
+                    technicien: '',
+                    seniorityCard: '',
+                    fidelity: '',
+                    reclamation: ''
+                })
+                setFormDataEdit({dateEntrer: '',
+                    dateSortie: '',
+                    blNumber: '',
+                    brand: '',
+                    matricule: '',
+                    clientName: '',
+                    clientPhone: '',
+                    serviceType: '',
+                    price: '',
+                    paidAmt: '',
+                    unpaidAmt: '',
+                    technicien: '',
+                    seniorityCard: '',
+                    fidelity: '',
+                    reclamation: ''})
                 setErrors({})
+
                 alert('Ajoutée avec Sucée')
+                getFetchData()
             }
         } catch (error) {
             if (error.response.data.auth == false) {
@@ -180,6 +215,32 @@ function Dashboard() {
     useEffect(() => {
         getFetchData()
     }, [])
+
+    useEffect(() => {
+        // Convert the input values to numbers
+        const priceValue = parseFloat(formData.price)
+        const paidAmountValue = parseFloat(formData.paidAmt)
+
+        // Calculate the unpaid amount
+        if (!isNaN(priceValue) && !isNaN(paidAmountValue)) {
+            setUnpaidAmt(priceValue - paidAmountValue)
+        } else {
+            setUnpaidAmt('')
+        }
+    }, [formData.price, formData.paidAmt])
+
+    useEffect(() => {
+        // Convert the input values to numbers
+        const priceValue = parseFloat(formDataEdit.price)
+        const paidAmountValue = parseFloat(formDataEdit.paidAmt)
+
+        // Calculate the unpaid amount
+        if (!isNaN(priceValue) && !isNaN(paidAmountValue)) {
+            setUnpaidAmt(priceValue - paidAmountValue)
+        } else {
+            setUnpaidAmt('')
+        }
+    }, [formDataEdit.price, formDataEdit.paidAmt])
 
     const handelEditButton = (order) => {
         setShowModal(true)
@@ -395,6 +456,20 @@ function Dashboard() {
                                 onChange={handelOnChange}
                             />
                         </div>
+                        <div className="input-type">
+                            <label htmlFor="unpaidAmt" className="font-bold pl-5 pb-4">
+                                Reste
+                            </label>
+                            <input
+                                type="text"
+                                name="unpaidAmt"
+                                className="border w-full px-5 py-3 focus:outline-none rounded-md"
+                                id="unpaidAmt"
+                                placeholder="Reste"
+                                value={unpaidAmt}
+                                onChange={handelOnChange}
+                            />
+                        </div>
                     </div>
 
                     <div className="flex flex-row gap-4 px-4">
@@ -414,7 +489,7 @@ function Dashboard() {
                         </div>
                         <div className="input-type">
                             <label htmlFor="seniorityCard" className="font-bold pl-5 pb-4">
-                                Carte d'ancienneté
+                                Carte d'abonnement
                             </label>
                             <input
                                 type="text"
@@ -437,6 +512,23 @@ function Dashboard() {
                                 id="fidelity"
                                 placeholder="Carte de fidélité"
                                 value={formData.fidelity}
+                                onChange={handelOnChange}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-row gap-4 px-4">
+                        <div className="input-type">
+                            <label htmlFor="reclamation" className="font-bold pl-5 pb-4">
+                                Divers reclamation
+                            </label>
+                            <input
+                                type="text"
+                                name="reclamation"
+                                className="border w-full px-5 py-3 focus:outline-none rounded-md"
+                                id="reclamation"
+                                placeholder="Divers reclamation"
+                                value={formData.reclamation}
                                 onChange={handelOnChange}
                             />
                         </div>
@@ -667,6 +759,19 @@ function Dashboard() {
                                             onChange={handelOnChangeEdit}
                                         />
                                     </div>
+                                    <div className="input-type">
+                                        <label htmlFor="unpaidAmt" className="font-bold pl-5 pb-4">
+                                            Reste
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="unpaidAmt"
+                                            className="border w-full px-5 py-3 focus:outline-none rounded-md"
+                                            id="unpaidAmt"
+                                            placeholder="Reste"
+                                            value={unpaidAmt}
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="flex flex-row gap-4 px-4">
@@ -709,6 +814,23 @@ function Dashboard() {
                                             id="fidelity"
                                             placeholder="Carte de fidélité"
                                             value={formDataEdit.fidelity}
+                                            onChange={handelOnChangeEdit}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-row gap-4 px-4">
+                                    <div className="input-type">
+                                        <label htmlFor="reclamation" className="font-bold pl-5 pb-4">
+                                            Divers reclamation
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="reclamation"
+                                            className="border w-full px-5 py-3 focus:outline-none rounded-md"
+                                            id="reclamation"
+                                            placeholder="Divers reclamation"
+                                            value={formDataEdit.reclamation}
                                             onChange={handelOnChangeEdit}
                                         />
                                     </div>
@@ -898,6 +1020,21 @@ function Dashboard() {
                                             onChange={handelOnChangeEdit}
                                         />
                                     </div>
+                                    <div className="input-type">
+                                        <label htmlFor="unpaidAmt" className="font-bold pl-5 pb-4">
+                                            Reste
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="unpaidAmt"
+                                            className="border w-full px-5 py-3 focus:outline-none rounded-md"
+                                            id="unpaidAmt"
+                                            placeholder="Reste"
+                                            value={unpaidAmt}
+                                            onChange={handelOnChange}
+                                            readOnly
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="flex flex-row gap-4 px-4">
@@ -944,6 +1081,23 @@ function Dashboard() {
                                             value={formDataEdit.fidelity}
                                             readOnly
                                             onChange={handelOnChangeEdit}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex flex-row gap-4 px-4">
+                                    <div className="input-type">
+                                        <label htmlFor="reclamation" className="font-bold pl-5 pb-4">
+                                            Divers reclamation
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="reclamation"
+                                            className="border w-full px-5 py-3 focus:outline-none rounded-md"
+                                            id="reclamation"
+                                            placeholder="Divers reclamation"
+                                            value={formDataEdit.reclamation}
+                                            onChange={handelOnChange}
+                                            readOnly
                                         />
                                     </div>
                                 </div>
