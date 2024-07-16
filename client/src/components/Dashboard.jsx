@@ -81,7 +81,7 @@ function Dashboard() {
 
     const handleCreationSubmit = async (e) => {
         e.preventDefault()
-
+return console.log(formData);
         try {
             const service = await axios.post('/orders', formData, {
                 headers: {
@@ -291,9 +291,18 @@ function Dashboard() {
         }
     }
 
+    const checkArabic = (value) => {
+        const arabicRegex = /[\u0600-\u06FF]/;
+        if (arabicRegex.test(value)) {
+            return "rtl"
+        } else {
+            return "ltr"
+        }
+    }
+
     return (
         <section>
-            <h1 className="text-xl text-center font-bold py-5">Audit</h1>
+            <h1 className="text-xl text-center font-bold py-5">Audit dev</h1>
 
             <div className="container mx-auto">
                 <form onSubmit={handleCreationSubmit} className="flex flex-col gap-5">
@@ -367,6 +376,7 @@ function Dashboard() {
                             </label>
                             <input
                                 type="text"
+                                dir={checkArabic(formData.matricule)}
                                 name="matricule"
                                 className="border w-full px-5 py-3 focus:outline-none rounded-md"
                                 id="matricule"
@@ -661,6 +671,7 @@ function Dashboard() {
                                         </label>
                                         <input
                                             type="text"
+                                            dir={checkArabic(formDataEdit.matricule)}
                                             name="matricule"
                                             className="border w-full px-5 py-3 focus:outline-none rounded-md"
                                             id="matricule"
@@ -928,6 +939,7 @@ function Dashboard() {
                                         </label>
                                         <input
                                             type="text"
+                                            dir={checkArabic(formDataEdit.matricule)}
                                             name="matricule"
                                             className="border w-full px-5 py-3 focus:outline-none rounded-md"
                                             id="matricule"
@@ -1154,7 +1166,7 @@ function Dashboard() {
                                     <span className="text-neutral-900">{order.brand}</span>
                                 </td>
                                 <td className="px-3 py-2 text-center items-center">
-                                    <span className="text-neutral-900">{order.matricule}</span>
+                                    <span className="text-neutral-900" dir={checkArabic(order.matricule)}>{order.matricule}</span>
                                 </td>
                                 <td className="px-3 py-2 text-center items-center">
                                     <span className="text-neutral-900">{order.clientName}</span>
