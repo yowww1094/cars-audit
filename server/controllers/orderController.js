@@ -27,41 +27,41 @@ const getAllOrder = async (req, res) => {
     searchQuery.dateSortie = new Date(dateSortie);
   }
   if (blNumber) {
-    searchQuery.blNumber = { $regex: blNumber, $options: "i" };
+    searchQuery.blNumber = { $regex: blNumber.trim(), $options: "i" };
   }
   if (brand) {
-    searchQuery.brand = { $regex: brand, $options: "i" };
+    searchQuery.brand = { $regex: brand.trim(), $options: "i" };
   }
   if (matricule) {
-    searchQuery.matricule = { $regex: matricule, $options: "i" };
+    searchQuery.matricule = { $regex: matricule.trim(), $options: "i" };
   }
   if (clientName) {
-    searchQuery.clientName = { $regex: clientName, $options: "i" };
+    searchQuery.clientName = { $regex: clientName.trim(), $options: "i" };
   }
   if (clientPhone) {
-    searchQuery.clientPhone = { $regex: clientPhone, $options: "i" };
+    searchQuery.clientPhone = { $regex: clientPhone.trim(), $options: "i" };
   }
   if (serviceType) {
-    searchQuery.serviceType = { $regex: serviceType, $options: "i" };
+    searchQuery.serviceType = { $regex: serviceType.trim(), $options: "i" };
   }
   if (price) {
-    searchQuery.price = price;
+    searchQuery.price = price.trim();
   }
   if (paidAmt) {
-    searchQuery.paidAmt = paidAmt;
+    searchQuery.paidAmt = paidAmt.trim();
   }
   if (technicien) {
-    searchQuery.technicien = { $regex: technicien, $options: "i" };
+    searchQuery.technicien = { $regex: technicien.trim(), $options: "i" };
   }
 
   if (seniorityCard) {
-    searchQuery.seniorityCard = seniorityCard;
+    searchQuery.seniorityCard = seniorityCard.trim();
   }
   if (fidelity) {
-    searchQuery.fidelity = fidelity;
+    searchQuery.fidelity = fidelity.trim();
   }
   if (reclamation) {
-    searchQuery.reclamation = reclamation;
+    searchQuery.reclamation = reclamation.trim();
   }
 
   try {
