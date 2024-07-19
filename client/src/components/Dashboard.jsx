@@ -81,7 +81,6 @@ function Dashboard() {
 
     const handleCreationSubmit = async (e) => {
         e.preventDefault()
-return console.log(formData);
         try {
             const service = await axios.post('/orders', formData, {
                 headers: {
