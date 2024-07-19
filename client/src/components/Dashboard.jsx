@@ -301,7 +301,7 @@ function Dashboard() {
 
     return (
         <section>
-            <h1 className="text-xl text-center font-bold py-5">Audit dev</h1>
+            <h1 className="text-xl text-center font-bold py-5">Audit</h1>
 
             <div className="container mx-auto">
                 <form onSubmit={handleCreationSubmit} className="flex flex-col gap-5">

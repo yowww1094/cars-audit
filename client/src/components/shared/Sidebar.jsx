@@ -66,7 +66,7 @@ function Sidebar() {
                     </span>
                     Changer Mot de Pass
                 </div>
-                <p className="text-center text-neutral-600 text-base">botdiv</p>
+                <p className="text-center text-neutral-600 text-xs pt-2">Copyright &copy; 2024, <a className='text-neutral-500 underline' href="https://github.com/yowww1094">yowww1094</a>. <br /> Tous les droits réservés.</p>
             </div>
         </div>
     )
