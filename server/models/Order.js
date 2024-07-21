@@ -35,7 +35,6 @@ const orderSchema = mongoose.Schema(
     },
     price: {
       type: String,
-      required: [true, "Prix de service est obligatoire"],
     },
     paidAmt: {
       type: String,

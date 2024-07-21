@@ -2,6 +2,7 @@ import Order from "../models/Order.js";
 import validateMongoDbId from "../utils/validateMongoDbId.js";
 
 const getAllOrder = async (req, res) => {
+  const { distinct, distinctBy } = req.query;
   const {
     dateEntrer,
     dateSortie,
@@ -68,7 +69,7 @@ const getAllOrder = async (req, res) => {
     const orders =
       Object.keys(searchQuery).length === 0
         ? await Order.find()
-        : await Order.find(searchQuery);
+        : distinct ? await Order.find(searchQuery).distinct(distinctBy) : await Order.find(searchQuery);
     if (!orders || orders.length === 0) {
       return res.status(200).json({
         orders,
