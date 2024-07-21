@@ -58,6 +58,7 @@ function Dashboard() {
         serviceType: '',
         price: ''
     })
+    const [matriculeSuggestions, setMatriculeSuggestions] = useState([])
 
     const handelOnChange = (e) => {
         const { value, name } = e.target
@@ -77,6 +78,39 @@ function Dashboard() {
                 [name]: value
             }
         })
+    }
+
+    const matriculeOnChange = async (e) => {
+        handelOnChange(e)
+        matriculeSearch(e)
+    }
+
+    const matriculeSearch = async (e) => {
+        const matricule = e.target.value
+        if (matricule) {
+            try {
+                const matricules = await axios.get('/orders', {
+                    params: {
+                        matricule: matricule,
+                        distinct: true,
+                        distinctBy: 'matricule'
+                    },
+                    headers: {
+                        authorization: localStorage.getItem('_auth')
+                    }
+                })
+                console.log(matricules.data.orders);
+                if (matricules.status == 200) {
+                    setMatriculeSuggestions(matricules.data.orders)
+                }
+            } catch (error) {
+                if (error.response?.data.auth == false) {
+                    navigate('/login')
+                }
+            }
+        } else {
+            setMatriculeSuggestions([])
+        }
     }
 
     const handleCreationSubmit = async (e) => {
@@ -105,7 +139,8 @@ function Dashboard() {
                     fidelity: '',
                     reclamation: ''
                 })
-                setFormDataEdit({dateEntrer: '',
+                setFormDataEdit({
+                    dateEntrer: '',
                     dateSortie: '',
                     blNumber: '',
                     brand: '',
@@ -119,7 +154,8 @@ function Dashboard() {
                     technicien: '',
                     seniorityCard: '',
                     fidelity: '',
-                    reclamation: ''})
+                    reclamation: ''
+                })
                 setErrors({})
 
                 alert('Ajoutée avec Sucée')
@@ -194,6 +230,7 @@ function Dashboard() {
     }
 
     const getFetchData = async () => {
+        setFormData([])
         try {
             const orders = await axios.get('/orders', {
                 headers: {
@@ -282,6 +319,35 @@ function Dashboard() {
         XLSX.writeFile(wb, 'Protech_Audit.xlsx')
     }
 
+    const handelMatriculeSuggestionClick = async (matricule) => {
+        try {
+            const orders = await axios.get('/orders', {
+                params: {
+                    matricule
+                },
+                headers: {
+                    authorization: localStorage.getItem('_auth')
+                }
+            })
+            //return console.log(orders.data.orders[0]);
+            if (orders.status == 200) {
+                const order = orders.data.orders[0];
+                setFormData({
+                    brand: order.brand,
+                    matricule: order.matricule,
+                    clientName: order.clientName,
+                    clientPhone: order.clientPhone,
+                })
+                setMatriculeSuggestions([])
+            }
+        } catch (error) {
+            if (error.response?.data.auth == false) {
+                navigate('/login')
+            }
+        }
+        
+    }
+
     const dateFormatter = (date, fieldType) => {
         if (fieldType == 'table') {
             return dateFormat(date, 'dd-mm-yyyy')
@@ -291,11 +357,11 @@ function Dashboard() {
     }
 
     const checkArabic = (value) => {
-        const arabicRegex = /[\u0600-\u06FF]/;
+        const arabicRegex = /[\u0600-\u06FF]/
         if (arabicRegex.test(value)) {
-            return "rtl"
+            return 'rtl'
         } else {
-            return "ltr"
+            return 'ltr'
         }
     }
 
@@ -369,7 +435,7 @@ function Dashboard() {
                     </div>
 
                     <div className="flex flex-row gap-4 px-4">
-                        <div className="input-type">
+                        <div className="input-type relative">
                             <label htmlFor="matricule" className="font-bold pl-5 pb-4">
                                 Matricule
                             </label>
@@ -381,8 +447,22 @@ function Dashboard() {
                                 id="matricule"
                                 placeholder="Matricule"
                                 value={formData.matricule}
-                                onChange={handelOnChange}
+                                onChange={matriculeOnChange}
                             />
+                            {matriculeSuggestions.length > 0 && (
+                                <div className="absolute flex flex-col gap-1 bg-neutral-200 w-full p-1 mt-1 rounded-md border border-neutral-300 font-medium">
+                                    {matriculeSuggestions.map((e) => (
+                                        <span
+                                            //key={e.orderId}
+                                            className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+                                            onClick={()=>handelMatriculeSuggestionClick(e)}
+                                        >
+                                            {e}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+
                             {errors.matricule && <span className="text-red-500 text-sm pl-5">{errors.matricule}</span>}
                         </div>
                         <div className="input-type">
@@ -529,7 +609,7 @@ function Dashboard() {
                     <div className="flex flex-row gap-4 px-4">
                         <div className="input-type">
                             <label htmlFor="reclamation" className="font-bold pl-5 pb-4">
-                                Divers reclamation
+                                Divers
                             </label>
                             <input
                                 type="text"
@@ -832,7 +912,7 @@ function Dashboard() {
                                 <div className="flex flex-row gap-4 px-4">
                                     <div className="input-type">
                                         <label htmlFor="reclamation" className="font-bold pl-5 pb-4">
-                                            Divers reclamation
+                                            Divers
                                         </label>
                                         <input
                                             type="text"
@@ -1098,7 +1178,7 @@ function Dashboard() {
                                 <div className="flex flex-row gap-4 px-4">
                                     <div className="input-type">
                                         <label htmlFor="reclamation" className="font-bold pl-5 pb-4">
-                                            Divers reclamation
+                                            Divers
                                         </label>
                                         <input
                                             type="text"
@@ -1165,7 +1245,9 @@ function Dashboard() {
                                     <span className="text-neutral-900">{order.brand}</span>
                                 </td>
                                 <td className="px-3 py-2 text-center items-center">
-                                    <span className="text-neutral-900" dir={checkArabic(order.matricule)}>{order.matricule}</span>
+                                    <span className="text-neutral-900" dir={checkArabic(order.matricule)}>
+                                        {order.matricule}
+                                    </span>
                                 </td>
                                 <td className="px-3 py-2 text-center items-center">
                                     <span className="text-neutral-900">{order.clientName}</span>
