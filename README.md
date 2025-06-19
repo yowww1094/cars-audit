@@ -66,15 +66,49 @@ The app will be running at http://localhost:3000.
 ```bash
 cars-audit/
 │
-├── public/            # Static files (CSS)
-├── routes/            # Express routes
-│   └── carRoutes.js   # Car-related routes
-├── views/             # EJS templates
-├── models/            # Mongoose models
-│   └── Car.js
-├── .env               # Environment variables
-├── app.js             # Main Express application
-├── package.json
+├── client/                         # Frontend
+│   ├── public/                     # Static files (CSS)
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── shared/
+│   │   │   │   ├── Header.jsx
+│   │   │   │   ├── Layout.jsx
+│   │   │   │   └── Sidebar.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Login.jsx
+│   │   │   └── NotFound.jsx
+│   │   ├── lib/consts/
+│   │   │   └── Navigation.jsx
+│   │   ├── App.jsx
+│   │   ├── index.js
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── package.json
+│   ├── tailwind.config.js
+│   └── vite.config.js
+│
+├── server/                         # Backend
+│   ├── config/                     # Configuration files
+│   │   ├── dbConnection.js 
+│   │   └── jsonWebTocken.js  
+│   ├── controllers/       
+│   │   ├── orderController.js  
+│   │   └── userController.js    
+│   ├── middlewares/                # Authentication and authorization middlewares
+│   │   └── authMiddleware.js  
+│   ├── models/    
+│   │   ├── Order.js  
+│   │   └── User.js  
+│   ├── routes/                     # Express routes
+│   │   ├── orderRoutes.js  
+│   │   ├── userRoutes.js  
+│   │   └── authRoutes.js  
+│   ├── utils/                      # Utilities
+│   │   ├── errorHandlers.js 
+│   │   └── validateMongodbId.js  
+│   ├── .env-example                # Environment variables
+│   ├── index.js            
+│   └── package.json
 └── README.md
 ```
 
